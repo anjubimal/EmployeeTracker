@@ -7,7 +7,7 @@ function runApp() {
         {
             type: 'list',
             message: 'Select:',
-            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add an employee role', 'update employee', 'exit'],
+            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add an employee role', 'add an employee','update employee', 'exit'],
             name: 'task'
         },
 
@@ -29,6 +29,10 @@ function runApp() {
 
                 case "add an employee role":
                     addRole();
+                    break;
+                
+                case "add an employee":
+                    addEmployee();
                     break;
 
                 case "update employee":
@@ -74,7 +78,7 @@ function addDepartment() {
         }
     ]).then(function (answer) {
         db.query(
-            "INSERT INTO departments SET ?", {
+            `INSERT INTO departments SET ?`, {
             name: answer.addDept
         },
             function (err, res) {
@@ -85,6 +89,43 @@ function addDepartment() {
         );
     });
 }
+
+function addEmployee() {
+    db.query(`SELECT * FROM departments`, (err, res) => {
+    if (err) throw err;
+    inquirer.prompt([
+        {
+            name: "first_name",
+            type: "input",
+            message: "what is the first name?"
+        },
+        {
+            name: 'last_name',
+            type: "input",
+            message: "what is the last name?"
+        },
+        {
+            name: "roleId",
+            type: "list",
+            message: "select a role",
+            choices: res.map(role => role.name)
+
+        }
+    ]).then(response => {
+        const selectedRole = res.find(role => role.name === response.roleId)
+        db.query(`INSERT INTO employees SET ?`, {
+            first_name: response.first_name,
+            last_name: response.last_name,
+            role_id: selectedRole.id
+        }, (err, res) => {
+            if (err) throw err;
+            console.log("new role added");
+            runApp();
+        })
+    })
+})
+}
+
 
 function addRole() {
     db.query(`SELECT * FROM departments`, (err, res) => {
