@@ -122,47 +122,7 @@ function addRole() {
     })
 }
 
-    function employeeModifyRole () {
-        db.query(`SELECT * FROM employees`, function (err, res) {
-            if (err) throw err;
-            inquirer
-                .prompt([{
-                    name: `employeeUpdate`,
-                    type: `list`,
-                    message: `Choose the employee whose role you would like to update.`,
-                    choices: res.map(item => item.first_name)
-                },
-                ])
-                .then((answer) => {
-                    const updateEmployee = (answer.employeeUpdate)
-                    db.query("SELECT * FROM roles", function (err, res) {
-                        if (err) throw err;
-                        inquirer
-                            .prompt([
-                                {
-                                    name: `role_id`,
-                                    type: `list`,
-                                    message: `Select the new role of the employee.`,
-                                    choices: res.map(item => item.title)
-                                },
-                            ])
-                            .then((answer) => {
-                                const roleChosen = res.find(item => item.title === answer.role_id)
-                                db.query(
-                                    "UPDATE employees SET ? WHERE first_name = " + "'" + updateEmployee + "'", {
-                                    role_id: "" + roleChosen.id + "",
-                                },
-                                    function (err) {
-                                        if (err) throw err;
-                                        console.log("Successfully updated " + updateEmployee + "'s role to " + answer.role_id + "!");
-                                        runApp();
-                                    }
-                                )
-                            })
-                    })
-                })
-        })
-    }
+    
 
 
 
