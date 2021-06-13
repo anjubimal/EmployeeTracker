@@ -14,7 +14,7 @@ VALUES ("engineer", 4000, 1),
 ("managment guy", 6000, 5);
 
 
-INSERT INTO employees(first_nam, last_name, role_id, manager_id)
+INSERT INTO employees(first_name, last_name, role_id, manager_id)
 VALUES ("anju", "bimal", 1, NULL),
 ("a", "b", 2, NULL),
 ("anne", "some", 3, NULL),

@@ -2,24 +2,12 @@ const db = require('./db/connection');
 const inquirer = require("inquirer");
 
 
-
-db.connect(function(err){
-    if(err) throw err;
-    console.log("id connection" + db.threadId);
-
-    runApp();
-})
-
-
-
-
-
 function runApp() {
     inquirer.prompt([
         {
             type: 'list',
             message: 'Select:',
-            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'update employee', 'add an employee role','exit'],
+            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add an employee role', 'update employee', 'exit'],
             name: 'task'
         },
 
@@ -91,7 +79,7 @@ function addDepartment() {
         },
             function (err, res) {
                 if (err) throw err;
-                console.log(" Department Added!\n");
+                console.log(" Department Added!");
                 runApp();
             }
         );
@@ -133,8 +121,8 @@ function addRole(){
         })
     })
 
-    const employeeModifyRole = () => {
-        connection.query("SELECT * FROM employee", function (err, results) {
+    function updateEmployee() {
+        db.query("SELECT * FROM employees", function (err, results) {
             if (err) throw err;
             inquirer
                 .prompt([{
@@ -146,7 +134,7 @@ function addRole(){
                 ])
                 .then((answer) => {
                     const updateEmployee = (answer.employeeUpdate)
-                    connection.query("SELECT * FROM role", function (err, results) {
+                    db.query("SELECT * FROM role", function (err, results) {
                         if (err) throw err;
                         inquirer
                             .prompt([
@@ -159,7 +147,7 @@ function addRole(){
                             ])
                             .then((answer) => {
                                 const roleChosen = results.find(item => item.title === answer.role_id)
-                                connection.query(
+                                db.query(
                                     "UPDATE employee SET ? WHERE first_name = " + "'" + updateEmployee + "'", {
                                     role_id: "" + roleChosen.id + "",
                                 },
@@ -178,3 +166,5 @@ function addRole(){
 
 
 }
+
+module.exports = runApp;
