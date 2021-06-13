@@ -2,6 +2,9 @@
 
 # Employee Tracker
 
+## Description
+Application that can be used to add information about various employees, departments and roles of at a company. Employees, departments and roles can be viewed, edited and updated. 
+
 ## Usage
 Application displays options that user can select to:
 * view all departments
