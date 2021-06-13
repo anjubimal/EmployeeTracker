@@ -12,8 +12,8 @@ function runApp() {
         },
 
     ])
-        .then(function(response){
-            switch(response.task){
+        .then(function (response) {
+            switch (response.task) {
                 case "view all departments":
                     viewDepartment();
                     break;
@@ -26,13 +26,13 @@ function runApp() {
                 case "add a department":
                     addDepartment();
                     break;
-                
+
                 case "add an employee role":
                     addRole();
                     break;
 
                 case "update employee":
-                    updateEmployee();
+                    employeeModifyRole();
                     break;
 
                 case "exit":
@@ -40,15 +40,15 @@ function runApp() {
                     break;
             }
         })
-    }
+}
 
-    function viewEmployees(){
-        db.query(`SELECT * FROM employees`,(err,res)=>{
-            if(err) throw err;
-            console.table(res)
-            runApp();
-        })
-    }
+function viewEmployees() {
+    db.query(`SELECT * FROM employees`, (err, res) => {
+        if (err) throw err;
+        console.table(res)
+        runApp();
+    })
+}
 
 function viewDepartment() {
     db.query(`SELECT * FROM departments`, (err, res) => {
@@ -86,9 +86,9 @@ function addDepartment() {
     });
 }
 
-function addRole(){
-    db.query(`SELECT * FROM departments`,(err,res) =>{
-        if(err) throw err;
+function addRole() {
+    db.query(`SELECT * FROM departments`, (err, res) => {
+        if (err) throw err;
         inquirer.prompt([
             {
                 name: "title",
@@ -104,37 +104,38 @@ function addRole(){
                 name: "departmentId",
                 type: "list",
                 message: "select a department for this role",
-                choices: res.map(dept =>dept.name)
+                choices: res.map(dept => dept.name)
 
-            }       
-        ]).then(response =>{
+            }
+        ]).then(response => {
             const selectedDepartment = res.find(dept => dept.name === response.departmentId)
             db.query(`INSERT INTO roles SET ?`, {
                 title: response.title,
                 salary: response.salary,
                 department_id: selectedDepartment.id
-            }, (err,res) =>{
-                if(err) throw err;
+            }, (err, res) => {
+                if (err) throw err;
                 console.log("new role added");
                 runApp();
             })
         })
     })
+}
 
-    function updateEmployee() {
-        db.query("SELECT * FROM employees", function (err, results) {
+    function employeeModifyRole () {
+        db.query(`SELECT * FROM employees`, function (err, res) {
             if (err) throw err;
             inquirer
                 .prompt([{
                     name: `employeeUpdate`,
                     type: `list`,
                     message: `Choose the employee whose role you would like to update.`,
-                    choices: results.map(item => item.first_name)
+                    choices: res.map(item => item.first_name)
                 },
                 ])
                 .then((answer) => {
                     const updateEmployee = (answer.employeeUpdate)
-                    db.query("SELECT * FROM role", function (err, results) {
+                    db.query("SELECT * FROM roles", function (err, res) {
                         if (err) throw err;
                         inquirer
                             .prompt([
@@ -142,13 +143,13 @@ function addRole(){
                                     name: `role_id`,
                                     type: `list`,
                                     message: `Select the new role of the employee.`,
-                                    choices: results.map(item => item.title)
+                                    choices: res.map(item => item.title)
                                 },
                             ])
                             .then((answer) => {
-                                const roleChosen = results.find(item => item.title === answer.role_id)
+                                const roleChosen = res.find(item => item.title === answer.role_id)
                                 db.query(
-                                    "UPDATE employee SET ? WHERE first_name = " + "'" + updateEmployee + "'", {
+                                    "UPDATE employees SET ? WHERE first_name = " + "'" + updateEmployee + "'", {
                                     role_id: "" + roleChosen.id + "",
                                 },
                                     function (err) {
@@ -165,6 +166,8 @@ function addRole(){
 
 
 
-}
+
+
+
 
 module.exports = runApp;

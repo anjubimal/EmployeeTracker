@@ -1,3 +1,4 @@
+
 const express = require('express');
 const db = require('./db/connection');
 const runApp = require('./app');
@@ -22,7 +23,11 @@ db.connect(function (err) {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
+
     runApp();
+
+    
 })
+
 
 
