@@ -11,3 +11,4 @@ Application displays options that user can select to:
 * update an employee
 
 ## Walkthrough Video
+* [video](https://drive.google.com/file/d/1VvIjZHksTHqbjnSEawdIVYeMxe9CjVjL/view?usp=sharing)
